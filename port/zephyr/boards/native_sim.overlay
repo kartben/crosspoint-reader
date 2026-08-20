@@ -7,13 +7,15 @@
 
 / {
 	chosen {
-		/delete-property/ zephyr,display;
 		/delete-property/ zephyr,touch;
 	};
 };
 
 &sdl_dc {
-	status = "disabled";
+	status = "okay";
+	height = <480>;
+	width = <800>;
+	title = "CrossPoint X4";
 };
 
 &input_sdl_touch {

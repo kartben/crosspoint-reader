@@ -189,7 +189,7 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build g++
+          sudo apt-get install -y cmake ninja-build g++ libsdl2-dev
 
       - name: Install west
         run: pip install -U west
@@ -216,7 +216,7 @@ jobs:
         run: west build -b native_sim/native/64 port/zephyr
 
       - name: Run bring-up
-        run: ./build/zephyr/zephyr.exe -no-rt -stop_at=0.5
+        run: SDL_VIDEODRIVER=dummy ./build/zephyr/zephyr.exe -no-rt -stop_at=0.5
 
   # This job is used as the PR required actions check, allows for changes to other steps in the future without breaking
   # PR requirements.

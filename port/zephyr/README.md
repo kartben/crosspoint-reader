@@ -20,8 +20,10 @@ Host (CI):
 
 ```bash
 west build -b native_sim/native/64 port/zephyr
-./build/zephyr/zephyr.exe -no-rt -stop_at=0.5
+./build/zephyr/zephyr.exe -rt -stop_at=20
 ```
+
+native_sim opens an 800×480 SDL window titled "CrossPoint X4". Headless CI uses `SDL_VIDEODRIVER=dummy`.
 
 Device (Zephyr SDK 1.0+):
 
