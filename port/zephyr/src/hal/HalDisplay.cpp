@@ -1,6 +1,6 @@
 #include "hal/HalDisplay.h"
 
-#include <cstring>
+#include <string.h>
 
 #include "os/Logging.h"
 

@@ -28,6 +28,7 @@ static const struct adc_dt_spec adcBtn2 = ADC_DT_SPEC_GET_BY_IDX(USER_NODE, 1);
 #endif
 #endif
 
+#if defined(CONFIG_ADC)
 static constexpr int32_t kAdcNoButton = 3900;
 static constexpr int32_t kLadder1[] = {3100, 2090, 750};
 static constexpr int32_t kLadder2[] = {1120};
@@ -44,7 +45,6 @@ static int decodeLadder(int32_t raw, const int32_t* edges, int edgeCount) {
   return edgeCount;
 }
 
-#if defined(CONFIG_ADC)
 static bool readAdcRaw(const struct adc_dt_spec* spec, int32_t* out) {
   int16_t sample = 0;
   struct adc_sequence sequence = {

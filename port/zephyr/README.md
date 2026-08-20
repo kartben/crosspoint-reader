@@ -20,6 +20,7 @@ Host (CI):
 
 ```bash
 west build -b native_sim/native/64 port/zephyr
+./build/zephyr/zephyr.exe -no-rt -stop_at=0.5
 ```
 
 Device (Zephyr SDK 1.0+):

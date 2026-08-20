@@ -215,6 +215,9 @@ jobs:
       - name: Build native_sim
         run: west build -b native_sim/native/64 port/zephyr
 
+      - name: Run bring-up
+        run: ./build/zephyr/zephyr.exe -no-rt -stop_at=0.5
+
   # This job is used as the PR required actions check, allows for changes to other steps in the future without breaking
   # PR requirements.
   test-status:

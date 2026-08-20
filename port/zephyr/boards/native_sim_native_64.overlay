@@ -1,0 +1,43 @@
+/*
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+/ {
+	chosen {
+		/delete-property/ zephyr,display;
+		/delete-property/ zephyr,touch;
+	};
+};
+
+&sdl_dc {
+	status = "disabled";
+};
+
+&input_sdl_touch {
+	status = "disabled";
+};
+
+/ {
+	buttons {
+		compatible = "gpio-keys";
+
+		power_button: power-button {
+			label = "Power";
+			gpios = <&gpio0 3 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			zephyr,code = <INPUT_KEY_POWER>;
+		};
+	};
+
+	zephyr,user {
+		pwr-hold-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+		usb-detect-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
+		epd-busy-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+	};
+
+	aliases {
+		sw0 = &power_button;
+	};
+};
