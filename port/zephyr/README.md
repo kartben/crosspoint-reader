@@ -4,10 +4,17 @@ Bring-up HAL for the Xteink X4. The EPUB reader still builds with PlatformIO.
 
 ```bash
 pip install west
-west init -l .
+mkdir -p .west
+cat > .west/config << 'EOF'
+[manifest]
+path = .
+file = west.yml
+EOF
 west update --narrow
 pip install -r deps/zephyr/scripts/requirements-base.txt
 ```
+
+(`west init -l .` puts `.west` in the parent directory; this repo is the workspace.)
 
 Host (CI):
 

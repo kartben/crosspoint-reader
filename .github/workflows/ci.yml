@@ -205,7 +205,8 @@ jobs:
 
       - name: West update
         run: |
-          west init -l .
+          mkdir -p .west
+          printf '%s\n' '[manifest]' 'path = .' 'file = west.yml' > .west/config
           west update --narrow
 
       - name: Install Zephyr Python deps
