@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: MIT
+
+manifest:
+  self:
+    path: .
+
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject-rtos
+      revision: v4.4.0
+      path: deps/zephyr
+      west-commands: scripts/west-commands.yml
+      import:
+        name-allowlist:
+          - cmsis
+          - cmsis_6
+          - fatfs
+          - hal_espressif

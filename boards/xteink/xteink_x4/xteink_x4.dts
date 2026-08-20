@@ -1,0 +1,135 @@
+/*
+ * SPDX-License-Identifier: MIT
+ */
+
+/dts-v1/;
+
+#include <espressif/esp32c3/esp32c3_mini_n4.dtsi>
+#include "xteink_x4-pinctrl.dtsi"
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/adc/adc.h>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <espressif/partitions_0x0_default_16M.dtsi>
+
+/ {
+	model = "Xteink X4";
+	compatible = "xteink,xteink-x4", "espressif,esp32c3";
+
+	chosen {
+		zephyr,sram = &sram1;
+		zephyr,console = &usb_serial;
+		zephyr,shell-uart = &usb_serial;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+	};
+
+	aliases {
+		sw0 = &power_button;
+		watchdog0 = &wdt0;
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+
+		power_button: power-button {
+			label = "Power";
+			gpios = <&gpio0 3 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			zephyr,code = <INPUT_KEY_POWER>;
+		};
+	};
+
+	zephyr,user {
+		pwr-hold-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+		usb-detect-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
+		epd-busy-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+		io-channels = <&adc0 1>, <&adc0 2>, <&adc0 0>;
+		io-channel-names = "btn1", "btn2", "battery";
+	};
+
+	/* MIPI-DBI wiring only. Do not attach an in-tree panel driver: most
+	 * X4 units are SSD1677, which Zephyr 4.4 does not support. HAL owns
+	 * the 48 KB framebuffer.
+	 */
+	mipi_dbi {
+		compatible = "zephyr,mipi-dbi-spi";
+		dc-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+		spi-dev = <&spi2>;
+		write-only;
+		#address-cells = <1>;
+		#size-cells = <0>;
+	};
+};
+
+&flash0 {
+	reg = <0x0 DT_SIZE_M(16)>;
+};
+
+&usb_serial {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&wdt0 {
+	status = "okay";
+};
+
+&trng0 {
+	status = "okay";
+};
+
+&adc0 {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	channel@0 {
+		reg = <0>;
+		zephyr,gain = "ADC_GAIN_1_4";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <12>;
+	};
+
+	channel@1 {
+		reg = <1>;
+		zephyr,gain = "ADC_GAIN_1_4";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <12>;
+	};
+
+	channel@2 {
+		reg = <2>;
+		zephyr,gain = "ADC_GAIN_1_4";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <12>;
+	};
+};
+
+&spi2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	pinctrl-0 = <&spim2_default>;
+	pinctrl-names = "default";
+	cs-gpios = <&gpio0 21 GPIO_ACTIVE_LOW>,
+		   <&gpio0 12 GPIO_ACTIVE_LOW>;
+
+	sdhc0: sdhc@1 {
+		compatible = "zephyr,sdhc-spi-slot";
+		reg = <1>;
+		status = "okay";
+		spi-max-frequency = <20000000>;
+
+		mmc {
+			compatible = "zephyr,sdmmc-disk";
+			disk-name = "SD";
+			status = "okay";
+		};
+	};
+};

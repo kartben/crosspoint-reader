@@ -1,0 +1,13 @@
+identifier: xteink_x4
+name: Xteink X4
+type: mcu
+arch: riscv
+toolchain:
+  - zephyr
+supported:
+  - adc
+  - gpio
+  - spi
+  - watchdog
+  - uart
+vendor: xteink

@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+
+config BOARD_XTEINK_X4
+	select SOC_ESP32C3_MINI_N4
