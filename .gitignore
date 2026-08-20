@@ -29,5 +29,10 @@ lib/EpdFont/scripts/output/
 /CMakeLists.txt
 /dependencies.lock
 /sdkconfig.*
+# Zephyr west workspace (cloned beside the app; not the in-tree module.yml)
+/.west/
+/deps/
+/modules/
+/bootloader/
 sdkconfig.sticky
 flake.*
