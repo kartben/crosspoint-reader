@@ -174,6 +174,46 @@ jobs:
       - name: Run tests
         run: ctest --test-dir build/test --output-on-failure -j
 
+  zephyr-native-sim:
+    name: Zephyr native_sim
+    runs-on: ubuntu-latest
+    env:
+      ZEPHYR_TOOLCHAIN_VARIANT: host
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build g++
+
+      - name: Install west
+        run: pip install -U west
+
+      - name: Cache west modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            modules
+          key: west-${{ runner.os }}-${{ hashFiles('west.yml') }}
+          restore-keys: west-${{ runner.os }}-
+
+      - name: West update
+        run: |
+          west init -l .
+          west update --narrow
+
+      - name: Install Zephyr Python deps
+        run: pip install -r deps/zephyr/scripts/requirements-base.txt
+
+      - name: Build native_sim
+        run: west build -b native_sim/native/64 port/zephyr
+
   # This job is used as the PR required actions check, allows for changes to other steps in the future without breaking
   # PR requirements.
   test-status:
@@ -183,6 +223,7 @@ jobs:
       - clang-format
       - cppcheck
       - unit-tests
+      - zephyr-native-sim
     if: always()
     runs-on: ubuntu-latest
     steps:
